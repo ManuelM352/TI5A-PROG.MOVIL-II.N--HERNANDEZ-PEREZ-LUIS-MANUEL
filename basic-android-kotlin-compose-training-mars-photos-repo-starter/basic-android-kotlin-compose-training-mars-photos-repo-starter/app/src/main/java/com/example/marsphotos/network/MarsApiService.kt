@@ -23,8 +23,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.GET
 
-    private const val BASE_URL =
-        "https://android-kotlin-fun-mars-server.appspot.com"
+
 
     /**
      * Use the Retrofit builder to build a retrofit object using a kotlinx.serialization converter
