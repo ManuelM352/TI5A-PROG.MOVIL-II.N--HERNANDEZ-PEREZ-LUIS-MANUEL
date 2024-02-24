@@ -62,6 +62,9 @@ class BlurViewModel(private val bluromaticRepository: BluromaticRepository) : Vi
         )
 
 
+    fun cancelWork() {
+        bluromaticRepository.cancelWork()
+    }
 
     /**
      * Call the method from repository to create the WorkRequest to apply the blur
@@ -93,3 +96,4 @@ sealed interface BlurUiState {
     object Loading : BlurUiState
     data class Complete(val outputUri: String) : BlurUiState
 }
+

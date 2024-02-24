@@ -17,6 +17,7 @@
 package com.example.bluromatic.data
 
 import androidx.work.WorkInfo
+import com.example.bluromatic.IMAGE_MANIPULATION_WORK_NAME
 import kotlinx.coroutines.flow.Flow
 
 interface BluromaticRepository {
