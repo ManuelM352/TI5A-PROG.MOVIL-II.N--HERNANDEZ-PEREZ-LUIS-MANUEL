@@ -63,7 +63,7 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
 
         // Add WorkRequest to blur the image
         val blurBuilder = OneTimeWorkRequestBuilder<BlurWorker>()
-        
+
         blurBuilder.setConstraints(constraints)
         // Input the Uri for the blur operation along with the blur level
         blurBuilder.setInputData(createInputDataForWorkRequest(blurLevel, imageUri))
