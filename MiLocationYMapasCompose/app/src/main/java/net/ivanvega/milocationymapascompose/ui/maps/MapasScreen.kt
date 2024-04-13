@@ -26,15 +26,13 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import com.google.android.gms.maps.GoogleMap
-import com.google.maps.android.ktx.awaitMap
-import com.google.android.gms.maps.GoogleMap.OnMapClickListener
+import android.location.Location
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.Polyline
-import android.location.Location
 import com.google.maps.android.ktx.*
 
 @Composable
@@ -115,6 +113,16 @@ fun MapWithCameraAndDrawing() {
             .build()
     }
 
+    // Función para limpiar los elementos dibujados
+    fun clearDrawnElements() {
+        drawnPoints = emptyList()
+        drawnPolyline = null
+        drawnPolygon = null
+        drawnCircleCenter = null
+        drawnCircleRadius = null
+        isDrawingCircle = false
+    }
+
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState,
@@ -189,6 +197,13 @@ fun MapWithCameraAndDrawing() {
             modifier = Modifier.padding(8.dp)
         ) {
             Text("Exit Circle Mode")
+        }
+        // Botón para recomponer elementos
+        Button(
+            onClick = { clearDrawnElements() }, // Llama a la función para limpiar elementos
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text("Recompose Elements")
         }
     }
 }
