@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PolylineOptions
@@ -35,6 +34,8 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.Polyline
+import android.location.Location
+import com.google.maps.android.ktx.*
 
 @Composable
 fun MiMapa(){
@@ -54,17 +55,42 @@ fun MiMapa(){
     }
 }
 @Composable
-fun MapWithCameraAndDrawingg() {
+fun MapWithCameraAndDrawing() {
     var drawnPoints by remember { mutableStateOf(emptyList<LatLng>()) }
     var drawnPolyline by remember { mutableStateOf<List<LatLng>?>(null) }
     var drawnPolygon by remember { mutableStateOf<List<LatLng>?>(null) }
     var drawnCircleCenter by remember { mutableStateOf<LatLng?>(null) }
     var drawnCircleRadius by remember { mutableStateOf<Float?>(null) }
+    var isDrawingCircle by remember { mutableStateOf(false) }
+
     val cameraPositionState = rememberCameraPositionState {
         CameraPosition.Builder()
             .target(LatLng(1.35, 103.87))
             .zoom(10f)
             .build()
+    }
+
+    fun startDrawingCircleMode() {
+        isDrawingCircle = true
+    }
+
+    fun calculateRadius(points: List<LatLng>): Float {
+        val firstPoint = points.firstOrNull()
+        val lastPoint = points.lastOrNull()
+
+        return if (firstPoint != null && lastPoint != null) {
+            val results = FloatArray(1)
+            Location.distanceBetween(
+                firstPoint.latitude,
+                firstPoint.longitude,
+                lastPoint.latitude,
+                lastPoint.longitude,
+                results
+            )
+            results[0]
+        } else {
+            0f
+        }
     }
 
     fun moveCameraToPosition(newPosition: LatLng) {
@@ -98,7 +124,10 @@ fun MapWithCameraAndDrawingg() {
             if (drawnPoints.size >= 3) {
                 drawnPolygon = drawnPoints // Update the polygon
             }
-            drawnCircleCenter = latLng // Update the circle center
+            if (isDrawingCircle) {
+                drawnCircleCenter = latLng // Update the circle center
+                drawnCircleRadius = calculateRadius(drawnPoints) // Update the circle radius
+            }
         }
     ) {
         drawnPolyline?.let { polyline ->
@@ -148,6 +177,18 @@ fun MapWithCameraAndDrawingg() {
             modifier = Modifier.padding(8.dp)
         ) {
             Text("Zoom Out")
+        }
+        Button(
+            onClick = { startDrawingCircleMode() },
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text("Draw Circle")
+        }
+        Button(
+            onClick = { isDrawingCircle = false },
+            modifier = Modifier.padding(8.dp)
+        ) {
+            Text("Exit Circle Mode")
         }
     }
 }
