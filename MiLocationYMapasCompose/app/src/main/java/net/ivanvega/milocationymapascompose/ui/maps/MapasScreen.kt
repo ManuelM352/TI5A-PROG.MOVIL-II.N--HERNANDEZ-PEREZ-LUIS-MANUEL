@@ -37,6 +37,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Card
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
+import com.google.android.gms.maps.StreetViewPanoramaOptions
+import com.google.android.gms.maps.StreetViewPanoramaView
 import com.google.maps.android.compose.Circle
 import com.google.maps.android.compose.Polygon
 import com.google.maps.android.compose.Polyline
@@ -80,6 +84,8 @@ fun MapWithCameraAndDrawing() {
             0f
         }
     }
+
+
 
     fun moveCameraToPosition(newPosition: LatLng) {
         cameraPositionState.position = CameraPosition.Builder()
