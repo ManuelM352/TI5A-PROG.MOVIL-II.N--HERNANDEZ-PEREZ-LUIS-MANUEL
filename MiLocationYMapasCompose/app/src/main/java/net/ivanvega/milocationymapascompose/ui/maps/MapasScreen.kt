@@ -32,6 +32,7 @@ import com.google.android.gms.maps.GoogleMap
 import android.location.Location
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -124,25 +125,25 @@ fun MapWithCameraAndDrawing() {
         cameraPositionState = cameraPositionState,
         onMapClick = { latLng ->
             drawnPoints = drawnPoints + latLng
-            drawnPolyline = drawnPoints.takeLast(2) // Update the polyline
+            drawnPolyline = drawnPoints.takeLast(2)
             if (drawnPoints.size >= 3) {
-                drawnPolygon = drawnPoints // Update the polygon
+                drawnPolygon = drawnPoints
             }
             if (isDrawingCircle) {
-                drawnCircleCenter = latLng // Update the circle center
-                drawnCircleRadius = calculateRadius(drawnPoints) // Update the circle radius
+                drawnCircleCenter = latLng
+                drawnCircleRadius = calculateRadius(drawnPoints)
             }
         }
     ) {
         drawnPolyline?.let { polyline ->
-            com.google.maps.android.compose.Polyline(points = polyline, color = Color.Blue, width = 5F)
+            Polyline(points = polyline, color = Color.Blue, width = 5F)
         }
         drawnPolygon?.let { polygon ->
             com.google.maps.android.compose.Polygon(points = polygon, fillColor = Color.Red.copy(alpha = 0.5f))
         }
         drawnCircleCenter?.let { center ->
             drawnCircleRadius?.let { radius ->
-                com.google.maps.android.compose.Circle(center = center, radius = radius.toDouble(), fillColor = Color.Green.copy(alpha = 0.5f))
+                Circle(center = center, radius = radius.toDouble(), fillColor = Color.Green.copy(alpha = 0.5f))
             }
         }
         drawnPoints.forEach { point ->
@@ -153,59 +154,79 @@ fun MapWithCameraAndDrawing() {
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(16.dp)
             .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Top
     ) {
-        Button(
-            onClick = { moveCameraToPosition(LatLng(1.35, 103.87)) },
-            modifier = Modifier.padding(8.dp)
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Move to Singapore")
+            Button(
+                onClick = { moveCameraToPosition(LatLng(1.35, 103.87)) },
+                modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+            ) {
+                Text("Mover a Singapore")
+            }
+            Button(
+                onClick = { moveCameraToPositionWithZoom(LatLng(1.0, 103.0), 15f) },
+                modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+            ) {
+                Text("Mover a una posición con zoom")
+            }
         }
-        Button(
-            onClick = { moveCameraToPositionWithZoom(LatLng(1.0, 103.0), 15f) },
-            modifier = Modifier.padding(8.dp)
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Move to Position with Zoom")
+            Button(
+                onClick = { moveCameraWithOffset(1f) },
+                modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+            ) {
+                Text("Acercar")
+            }
+            Button(
+                onClick = { moveCameraWithOffset(-1f) },
+                modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+            ) {
+                Text("Alejar")
+            }
         }
-        Button(
-            onClick = { moveCameraWithOffset(1f) },
-            modifier = Modifier.padding(8.dp)
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Zoom In")
+            Button(
+                onClick = { startDrawingCircleMode() },
+                modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+            ) {
+                Text("Dibujar circulo")
+            }
+            Button(
+                onClick = { isDrawingCircle = false },
+                modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+            ) {
+                Text("Salir del modo circulo")
+            }
         }
-        Button(
-            onClick = { moveCameraWithOffset(-1f) },
-            modifier = Modifier.padding(8.dp)
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Zoom Out")
+            Button(
+                onClick = { clearDrawnElements() },
+                modifier = Modifier.weight(1f).padding(horizontal = 4.dp)
+            ) {
+                Text("Recomponer Elementos")
+            }
         }
-        Button(
-            onClick = { startDrawingCircleMode() },
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text("Draw Circle")
-        }
-        Button(
-            onClick = { isDrawingCircle = false },
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text("Exit Circle Mode")
-        }
-        // Botón para recomponer elementos
-        Button(
-            onClick = { clearDrawnElements() }, // Llama a la función para limpiar elementos
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text("Recompose Elements")
-        }
+
     }
 
     drawnPoints.forEach { point ->
         MarkerInfoWindow(
-            title = "Custom Info Window",
+            title = "Coordenadas",
             snippet = "Lat: ${point.latitude}, Lng: ${point.longitude}"
         )
     }

@@ -41,15 +41,15 @@ class MainActivity : ComponentActivity(), OnStreetViewPanoramaReadyCallback {
                     //LocationPermissionScreen()
                     //CurrentLocationScreen()
                     //LocationUpdatesScreen()
-                    //MapWithCameraAndDrawing()
-                    StreetViewPanoramaFragmentContainer()
+                    MapWithCameraAndDrawing()
+                    //StreetViewPanoramaFragmentContainer()
                 }
             }
         }
     }
     override fun onStreetViewPanoramaReady(panorama: StreetViewPanorama) {
         // Configurar la vista de Street View según sea necesario
-        val initialPosition = LatLng(40.748817, -73.985428) // Ubicación inicial (ejemplo: Times Square, NY)
+        val initialPosition = LatLng(40.748817, -73.985428) // Ubicación inicial
         panorama.setPosition(initialPosition)
     }
 }
@@ -68,8 +68,7 @@ fun StreetViewPanoramaFragmentContainer() {
         view.onCreate(null)
         view.onResume()
         view.getStreetViewPanoramaAsync { panorama ->
-            // Configurar la vista de Street View según sea necesario
-            val initialPosition = LatLng(40.748817, -73.985428) // Ubicación inicial (ejemplo: Times Square, NY)
+            val initialPosition = LatLng(40.748817, -73.985428)
             panorama.setPosition(initialPosition)
         }
     }
